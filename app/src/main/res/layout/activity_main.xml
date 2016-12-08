@@ -7,9 +7,17 @@
     android:orientation="vertical"
     tools:context="com.udacity.stockhawk.ui.MainActivity">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date here"
+        android:layout_margin="16dp"
+        android:id="@+id/lastUpdatedTextView"/>
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
+        android:layout_marginTop="32dp"
         android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
@@ -45,3 +53,4 @@
         android:visibility="gone"
         tools:text="Error message" />
 </merge>
+

@@ -7,6 +7,7 @@ import android.preference.PreferenceManager;
 import com.udacity.stockhawk.R;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,6 +17,8 @@ public final class PrefUtils {
     }
 
     public static Set<String> getStocks(Context context) {
+        setDate(context);
+
         String stocksKey = context.getString(R.string.pref_stocks_key);
         String initializedKey = context.getString(R.string.pref_stocks_initialized_key);
         String[] defaultStocksList = context.getResources().getStringArray(R.array.default_stocks);
@@ -85,6 +88,15 @@ public final class PrefUtils {
             editor.putString(key, absoluteKey);
         }
 
+        editor.apply();
+    }
+
+    public static void setDate(Context context) {
+        Date currentDate = new Date();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putLong("updated", currentDate.getTime());
         editor.apply();
     }
 

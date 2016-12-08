@@ -130,7 +130,7 @@ public final class QuoteSyncJob {
 
         scheduler.schedule(builder.build());
     }
- 
+
 
     synchronized public static void initialize(final Context context) {
 

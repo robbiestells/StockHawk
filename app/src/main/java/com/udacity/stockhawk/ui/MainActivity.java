@@ -1,10 +1,12 @@
 package com.udacity.stockhawk.ui;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -25,6 +27,10 @@ import com.udacity.stockhawk.data.Contract;
 import com.udacity.stockhawk.data.PrefUtils;
 import com.udacity.stockhawk.sync.QuoteSyncJob;
 
+import org.w3c.dom.Text;
+
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
@@ -42,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.error)
     TextView error;
+    @BindView(R.id.lastUpdatedTextView)
+    TextView lastUpdatedTV;
     private StockAdapter adapter;
 
     @Override
@@ -59,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         adapter = new StockAdapter(this, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
 
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setRefreshing(true);
@@ -81,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         }).attachToRecyclerView(recyclerView);
 
-
+        getDate();
     }
 
     private boolean networkUp() {
@@ -111,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         } else {
             error.setVisibility(View.GONE);
         }
+        getDate();
     }
 
     public void button(View view) {
@@ -186,5 +196,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void getDate() {
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        long date = prefs.getLong("updated", 0L);
+
+        if (date != 0L){
+            Date updated = new Date(date);
+            lastUpdatedTV.setText(getString(R.string.LastUpdate) + " " + updated);
+            return;
+        }
+        else {
+            lastUpdatedTV.setText(R.string.NoUpdate);
+            return;}
     }
 }
