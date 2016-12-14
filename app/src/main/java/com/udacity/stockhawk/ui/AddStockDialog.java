@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -12,17 +13,39 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.jjoe64.graphview.GridLabelRenderer;
+import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 import com.udacity.stockhawk.R;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import yahoofinance.Stock;
+import yahoofinance.YahooFinance;
+import yahoofinance.histquotes.HistoricalQuote;
+import yahoofinance.histquotes.Interval;
+
+import static android.R.string.no;
+import static com.udacity.stockhawk.R.id.stockNameTV;
+import static com.udacity.stockhawk.R.id.stockPriceTV;
 
 
 public class AddStockDialog extends DialogFragment {
 
     @BindView(R.id.dialog_stock)
     EditText stock;
+
+    YahooFinance yahooFinance;
+    String stockToCheck;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -37,6 +60,9 @@ public class AddStockDialog extends DialogFragment {
         stock.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                stockToCheck = stock.getText().toString();
+
+                //if stock exists then add stock
                 addStock();
                 return true;
             }
@@ -58,6 +84,7 @@ public class AddStockDialog extends DialogFragment {
     }
 
     private void addStock() {
+
         Activity parent = getActivity();
         if (parent instanceof MainActivity) {
             ((MainActivity) parent).addStock(stock.getText().toString());
@@ -65,5 +92,5 @@ public class AddStockDialog extends DialogFragment {
         dismissAllowingStateLoss();
     }
 
-
 }
+

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -29,16 +30,25 @@ import com.udacity.stockhawk.sync.QuoteSyncJob;
 
 import org.w3c.dom.Text;
 
+import java.io.IOException;
 import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
+import yahoofinance.Stock;
+import yahoofinance.YahooFinance;
+
+import static android.R.id.message;
+import static com.udacity.stockhawk.R.id.symbol;
+import static java.security.AccessController.getContext;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,
         SwipeRefreshLayout.OnRefreshListener,
         StockAdapter.StockAdapterOnClickHandler {
 
+    Context context = this;
+    Boolean found;
     private static final int STOCK_LOADER = 0;
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -51,6 +61,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @BindView(R.id.lastUpdatedTextView)
     TextView lastUpdatedTV;
     private StockAdapter adapter;
+
+    YahooFinance yahooFinance;
+    String stockToCheck;
+    String noStockMessage;
 
     @Override
     public void onClick(String symbol) {
@@ -128,18 +142,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     void addStock(String symbol) {
-        if (symbol != null && !symbol.isEmpty()) {
+      //  if (symbol != null && !symbol.isEmpty()) {
+            stockToCheck = symbol;
+            new checkStock().execute();
+         //   if (networkUp()) {
+          //      swipeRefreshLayout.setRefreshing(true);
+          //  } else {
+          //      String message = getString(R.string.toast_stock_added_no_connectivity, symbol);
+           //     Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+           // }
 
-            if (networkUp()) {
-                swipeRefreshLayout.setRefreshing(true);
-            } else {
-                String message = getString(R.string.toast_stock_added_no_connectivity, symbol);
-                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-            }
-
-            PrefUtils.addStock(this, symbol);
-            QuoteSyncJob.syncImmediately(this);
-        }
+            //move these
+            //PrefUtils.addStock(this, symbol);
+            //QuoteSyncJob.syncImmediately(this);
+       // }
     }
 
     @Override
@@ -211,5 +227,49 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         else {
             lastUpdatedTV.setText(R.string.NoUpdate);
             return;}
+    }
+
+    private class checkStock extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            try {
+                //Stock stock = yahooFinance.get(selectedStock, from, to, Interval.MONTHLY);
+                Stock checkStock = yahooFinance.get(stockToCheck);
+                if (checkStock.getCurrency() != null){
+                    found = true;
+                   // addStock(stockToCheck);
+
+                } else {
+                    found = false;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            if (found != true){
+                noStockMessage = "Stock does not exist";
+                Toast.makeText(context, noStockMessage, Toast.LENGTH_SHORT).show();
+            } else {
+                if (networkUp()) {
+                    swipeRefreshLayout.setRefreshing(true);
+                } else {
+                    String message = getString(R.string.toast_stock_added_no_connectivity, stockToCheck);
+                    Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+                }
+
+                //move these
+                PrefUtils.addStock(context, stockToCheck);
+                QuoteSyncJob.syncImmediately(context);
+            }
+        }
+
     }
 }

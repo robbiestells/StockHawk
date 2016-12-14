@@ -79,7 +79,8 @@ public class StockDetail extends AppCompatActivity {
             from.add(Calendar.YEAR, -5); // from 5 years ago
 
             try {
-                Stock stock = yahooFinance.get(selectedStock, from, to, Interval.MONTHLY);
+                //Stock stock = yahooFinance.get(selectedStock, from, to, Interval.MONTHLY);
+                Stock stock = yahooFinance.get("aoidjf", from, to, Interval.MONTHLY);
                 stockPrice = stock.getQuote().getPrice();
                 stockHistoryList = stock.getHistory();
 
