@@ -39,5 +39,6 @@
     <string name="LastUpdate">"Last Update: "</string>
     <string name="NoUpdate">Connect to internet to start</string>
     <string name="noStockMessage">\"Stock does not exist\"</string>
+    <string name="title_widget_stocks">Stock Widget</string>
 
 </resources>
