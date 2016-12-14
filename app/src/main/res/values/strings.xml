@@ -38,5 +38,6 @@
     <string name="addButtonContent">Add new stock button</string>
     <string name="LastUpdate">"Last Update: "</string>
     <string name="NoUpdate">Connect to internet to start</string>
+    <string name="noStockMessage">\"Stock does not exist\"</string>
 
 </resources>

@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     YahooFinance yahooFinance;
     String stockToCheck;
-    String noStockMessage;
 
     @Override
     public void onClick(String symbol) {
@@ -142,20 +141,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     void addStock(String symbol) {
-      //  if (symbol != null && !symbol.isEmpty()) {
-            stockToCheck = symbol;
-            new checkStock().execute();
-         //   if (networkUp()) {
-          //      swipeRefreshLayout.setRefreshing(true);
-          //  } else {
-          //      String message = getString(R.string.toast_stock_added_no_connectivity, symbol);
-           //     Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-           // }
+        stockToCheck = symbol;
 
-            //move these
-            //PrefUtils.addStock(this, symbol);
-            //QuoteSyncJob.syncImmediately(this);
-       // }
+        //check to see if stock exists
+        new checkStock().execute();
     }
 
     @Override
@@ -219,28 +208,28 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         long date = prefs.getLong("updated", 0L);
 
-        if (date != 0L){
+        if (date != 0L) {
             Date updated = new Date(date);
             lastUpdatedTV.setText(getString(R.string.LastUpdate) + " " + updated);
             return;
-        }
-        else {
+        } else {
             lastUpdatedTV.setText(R.string.NoUpdate);
-            return;}
+            return;
+        }
     }
 
+    //check to see if stock exists
     private class checkStock extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... voids) {
-
             try {
-                //Stock stock = yahooFinance.get(selectedStock, from, to, Interval.MONTHLY);
+                //see if the stock is found
                 Stock checkStock = yahooFinance.get(stockToCheck);
-                if (checkStock.getCurrency() != null){
-                    found = true;
-                   // addStock(stockToCheck);
 
+                //looks to see if currency is set, if not, sets found to false
+                if (checkStock.getCurrency() != null) {
+                    found = true;
                 } else {
                     found = false;
                 }
@@ -254,9 +243,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            if (found != true){
-                noStockMessage = "Stock does not exist";
-                Toast.makeText(context, noStockMessage, Toast.LENGTH_SHORT).show();
+            //if stock is not found, display error message, else add stock to existing list
+            if (found != true) {
+                Toast.makeText(context, R.string.noStockMessage, Toast.LENGTH_SHORT).show();
             } else {
                 if (networkUp()) {
                     swipeRefreshLayout.setRefreshing(true);
@@ -265,11 +254,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     Toast.makeText(context, message, Toast.LENGTH_LONG).show();
                 }
 
-                //move these
                 PrefUtils.addStock(context, stockToCheck);
                 QuoteSyncJob.syncImmediately(context);
             }
         }
-
     }
 }
