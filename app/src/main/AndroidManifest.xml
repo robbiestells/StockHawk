@@ -34,17 +34,15 @@
             android:name=".sync.QuoteIntentService"
             android:exported="false" />
 
-        <receiver android:name="com.udacity.stockhawk.widget.WidgetProvider"
-            android:label="@string/title_widget_stocks">
+        <service android:name=".widget.WidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
+        <receiver android:name=".widget.CollectionWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="android.udacity.stockhawk.ACTION_DATA_UPDATED" />
+                <action android:name="com.udacity.stockhawk.app.ACTION_DATA_UPDATED" />
             </intent-filter>
-            <meta-data android:name="android.appwidget.provider"
-                android:resource="@xml/widget_provider"/>
         </receiver>
-        
-
         <provider
             android:name=".data.StockProvider"
             android:authorities="com.udacity.stockhawk"

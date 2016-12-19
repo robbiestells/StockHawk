@@ -3,6 +3,7 @@ package com.udacity.stockhawk.ui;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
@@ -48,7 +49,7 @@ import static java.security.AccessController.getContext;
 public class MainActivity extends AppCompatActivity  implements LoaderManager.LoaderCallbacks<Cursor>,
         SwipeRefreshLayout.OnRefreshListener,
         StockAdapter.StockAdapterOnClickHandler  {
-
+    public static final String ACTION_DATA_UPDATED="com.udacity.stockhawk.app.ACTION_DATA_UPDATED";
     Context context = this;
     Boolean found;
     private static final int STOCK_LOADER = 0;
@@ -165,6 +166,8 @@ public class MainActivity extends AppCompatActivity  implements LoaderManager.Lo
             error.setVisibility(View.GONE);
         }
         adapter.setCursor(data);
+        Intent dataUpdated = new Intent(ACTION_DATA_UPDATED);
+        this.sendBroadcast(dataUpdated);
     }
 
 
