@@ -21,23 +21,13 @@ import static com.udacity.stockhawk.R.id.price;
 
 public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory {
 
-    //private final DecimalFormat dollarFormatWithPlus;
-    //private final DecimalFormat dollarFormat;
     private  int CurrentPrice;
-  //  private final DecimalFormat percentageFormat;
 
     Context mContext = null;
     Cursor data = null;
     public WidgetDataProvider(Context context, Intent intent) {
         mContext = context;
-      //  dollarFormat = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
 
-       // dollarFormatWithPlus = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
-        //dollarFormatWithPlus.setPositivePrefix("+$");
-        //percentageFormat = (DecimalFormat) NumberFormat.getPercentInstance(Locale.getDefault());
-       // percentageFormat.setMaximumFractionDigits(2);
-        //percentageFormat.setMinimumFractionDigits(2);
-        //percentageFormat.setPositivePrefix("+");
     }
 
     @Override
@@ -64,25 +54,13 @@ public class WidgetDataProvider implements RemoteViewsService.RemoteViewsFactory
         data.moveToPosition(position);
 
         RemoteViews view = new RemoteViews(mContext.getPackageName(),
-                R.layout.list_item_quote);
+                R.layout.widget_list_item);
         String price=String.valueOf(data.getFloat(Contract.Quote.POSITION_PRICE));
         String symbol= data.getString(Contract.Quote.POSITION_SYMBOL);
-        //float rawAbsoluteChange =  data.getFloat(Contract.Quote.POSITION_ABSOLUTE_CHANGE);
-      //  String change = dollarFormatWithPlus.format(rawAbsoluteChange);
 
-        view.setTextViewText(R.id.symbol, symbol);
         view.setTextViewText(R.id.stock_name, symbol);
         view.setTextViewText(R.id.stock_price, price);
-       // view.setTextViewText(price,price);
 
-//        view.setTextViewText(change,change+"");
-//        if (rawAbsoluteChange > 0) {
-//            view.setInt(change, "setBackgroundResource",  R.drawable.percent_change_pill_green);
-//
-//        } else {
-//
-//            view.setInt(change, "setBackgroundResource", R.drawable.percent_change_pill_red);
-//        }
         return view;
     }
 

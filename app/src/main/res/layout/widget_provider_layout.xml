@@ -1,44 +1,24 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_margin="1dp"
+    >
 
-    <FrameLayout
-        android:id="@+id/widget"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/abc_action_bar_default_height_material">
-
-        <ImageView
-            android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_dollar" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
+            android:text="@string/app_name"
+            android:background="@color/colorPrimaryDark"/>
         <ListView
+            android:background="@color/colorPrimaryDark"
             android:id="@+id/widget_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@null"
-            android:dividerHeight="0dp"
-            tools:listitem="@layout/widget_list_item" />
+            android:layout_height="match_parent">
+        </ListView>
 
-        <TextView
-            android:id="@+id/widget_empty"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fontFamily="sans-serif-condensed"
-            android:gravity="center"
-            android:text="@string/empty_forecast_list"
-            android:textAppearance="?android:textAppearanceLarge" />
-    </FrameLayout>
-
-</LinearLayout>
+    </LinearLayout>
+</FrameLayout>
