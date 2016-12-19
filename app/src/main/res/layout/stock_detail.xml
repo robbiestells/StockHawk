@@ -1,20 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/stockNameTV"/>
+        android:layout_margin="16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/stockPriceTV"/>
+        <TextView
+            android:id="@+id/stockNameTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="GOOG"
+            android:textSize="30dp"/>
+
+        <TextView
+            android:id="@+id/stockPriceTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="20.87"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:textSize="30dp"/>
+    </LinearLayout>
 
     <com.jjoe64.graphview.GraphView
+        android:id="@+id/graph"
         android:layout_width="match_parent"
-        android:layout_height="200dip"
-        android:id="@+id/graph" />
+        android:layout_height="200dip" />
 </LinearLayout>
