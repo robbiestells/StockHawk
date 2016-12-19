@@ -13,11 +13,13 @@ import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
 import com.udacity.stockhawk.R;
+import com.udacity.stockhawk.data.Contract;
 
 import java.lang.annotation.Target;
 import java.util.concurrent.ExecutionException;
 
 import static android.R.attr.description;
+import static com.udacity.stockhawk.data.Contract.*;
 
 /**
  * Created by rsteller on 12/14/2016.
@@ -25,22 +27,30 @@ import static android.R.attr.description;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class WidgetRemoteViewsService extends RemoteViewsService {
-    public final String LOG_TAG = DetailWidgetRemoteViewsService.class.getSimpleName();
-    private static final String[] FORECAST_COLUMNS = {
-            WeatherContract.WeatherEntry.TABLE_NAME + "." + WeatherContract.WeatherEntry._ID,
-            WeatherContract.WeatherEntry.COLUMN_DATE,
-            WeatherContract.WeatherEntry.COLUMN_WEATHER_ID,
-            WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
-            WeatherContract.WeatherEntry.COLUMN_MAX_TEMP,
-            WeatherContract.WeatherEntry.COLUMN_MIN_TEMP
+    public final String LOG_TAG = WidgetRemoteViewsService.class.getSimpleName();
+    private static final String[] QUOTE_COLUMNS = {
+            Quote.TABLE_NAME + "." + Quote._ID,
+            Quote.COLUMN_SYMBOL,
+            Quote.COLUMN_PRICE,
+            Quote.COLUMN_ABSOLUTE_CHANGE,
+            Quote.COLUMN_PERCENTAGE_CHANGE,
+            Quote.COLUMN_HISTORY
     };
     // these indices must match the projection
-    static final int INDEX_WEATHER_ID = 0;
-    static final int INDEX_WEATHER_DATE = 1;
-    static final int INDEX_WEATHER_CONDITION_ID = 2;
-    static final int INDEX_WEATHER_DESC = 3;
-    static final int INDEX_WEATHER_MAX_TEMP = 4;
-    static final int INDEX_WEATHER_MIN_TEMP = 5;
+
+    static final int INDEX_STOCK_ID = 0;
+    static final int INDEX_SYMBOL = 1;
+    static final int INDEX_PRICE = 2;
+    static final int INDEX_ABSOLUTE_CHANGE = 3;
+    static final int INDEX_PERCENTAGE_CHANGE = 4;
+    static final int INDEX_HISTORY = 5;
+
+//    static final int INDEX_WEATHER_ID = 0;
+//    static final int INDEX_WEATHER_DATE = 1;
+//    static final int INDEX_WEATHER_CONDITION_ID = 2;
+//    static final int INDEX_WEATHER_DESC = 3;
+//    static final int INDEX_WEATHER_MAX_TEMP = 4;
+//    static final int INDEX_WEATHER_MIN_TEMP = 5;
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
@@ -62,14 +72,15 @@ public class WidgetRemoteViewsService extends RemoteViewsService {
                 // data. Therefore we need to clear (and finally restore) the calling identity so
                 // that calls use our process and permission
                 final long identityToken = Binder.clearCallingIdentity();
-                String location = Utility.getPreferredLocation(DetailWidgetRemoteViewsService.this);
+//                String location = Utility.getPreferredLocation(DetailWidgetRemoteViewsService.this);
+
                 Uri weatherForLocationUri = WeatherContract.WeatherEntry
                         .buildWeatherLocationWithStartDate(location, System.currentTimeMillis());
                 data = getContentResolver().query(weatherForLocationUri,
-                        FORECAST_COLUMNS,
+                        QUOTE_COLUMNS,
                         null,
                         null,
-                        WeatherContract.WeatherEntry.COLUMN_DATE + " ASC");
+                        null);
                 Binder.restoreCallingIdentity(identityToken);
             }
 
@@ -151,7 +162,7 @@ public class WidgetRemoteViewsService extends RemoteViewsService {
 
             @Override
             public RemoteViews getLoadingView() {
-                return new RemoteViews(getPackageName(), R.layout.widget_detail_list_item);
+                return new RemoteViews(getPackageName(), R.layout.widget_list_item);
             }
 
             @Override
@@ -162,7 +173,7 @@ public class WidgetRemoteViewsService extends RemoteViewsService {
             @Override
             public long getItemId(int position) {
                 if (data.moveToPosition(position))
-                    return data.getLong(INDEX_WEATHER_ID);
+                    return data.getLong(INDEX_STOCK_ID);
                 return position;
             }
 
